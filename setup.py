@@ -9,5 +9,6 @@ setup(
     license = "Apache2",
     keywords = "fogbow powernap win32",
     url = "https://github.com/fogbow/fogbow-powernap-win32",
+    install_requires=['novaclient'],
     packages=['win32powernap']
 )
