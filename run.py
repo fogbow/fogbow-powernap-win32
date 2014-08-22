@@ -1,6 +1,9 @@
 from win32powernap import powernap
+from ConfigParser import ConfigParser
+import sys
 
-conf = {'check_interval': 5, 'idle_interval': 30}
+config = ConfigParser()
+config.read(sys.argv[1])
 
-pnap = powernap.PowerNap(conf)
+pnap = powernap.PowerNap(dict(config.items('GENERAL')))
 pnap.run()

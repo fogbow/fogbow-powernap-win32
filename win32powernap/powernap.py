@@ -24,13 +24,12 @@ class PowerNap:
     			self.idle = False
     			self.inactive_for = 0
     		else:
-    			if self.inactive_for >= self.conf['idle_interval'] and not self.idle:
+    			if self.inactive_for >= int(self.conf['idle_interval']) and not self.idle:
     				self.idle = True
     				for action in self.actions:
     					action.takedown()
-    			self.inactive_for += self.conf['check_interval']
-    		print 'Inactive for %d' % self.inactive_for
-    		time.sleep(self.conf['check_interval'])
+    			self.inactive_for += int(self.conf['check_interval'])
+    		time.sleep(int(self.conf['check_interval']))
 
 
 
