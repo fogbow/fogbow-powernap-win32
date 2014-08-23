@@ -3,17 +3,18 @@ import ConfigParser
 import os
 import platform
 
-def get_config():
+def get_config(conf):
     config = ConfigParser.ConfigParser()
-    config.readfp(open('C:\\nova\\nova.conf'))
+    config.readfp(open(conf['nova_conf_file']))
     return config
 
-def host():
-    host = get_config().get('DEFAULT', 'host')
-    return host if host is not None else platform.node()
-
-def load_nova_client():
-    config = get_config()
+def host(conf):
+    if not get_config(conf).has_option('DEFAULT', 'host'):
+        return platform.node()
+    return get_config(conf).get('DEFAULT', 'host')
+ 
+def load_nova_client(conf):
+    config = get_config(conf)
     nc = client.Client(
         config.get('keystone_authtoken', 'admin_user'), 
         config.get('keystone_authtoken', 'admin_password'), 
@@ -28,10 +29,10 @@ def load_nova_client():
 
 class ManageNovaComputeAction:
 
-    def bringup(self):
-        nc = load_nova_client()
-        host = host()
-        search_opts = {'host': host, 'all_tenants': 1}
+    def bringup(self, conf):
+        nc = load_nova_client(conf)
+        auth_host = host(conf)
+        search_opts = {'host': auth_host, 'all_tenants': 1}
         server_list = nc.servers.list(search_opts=search_opts)
         for each_server in server_list:
             each_server.stop()
@@ -40,11 +41,11 @@ class ManageNovaComputeAction:
         for each_server in server_list:
             each_server.delete()
 
-        nc.services.disable(host, 'nova-compute')
-        nc.services.disable(host, 'nova-network')
+        nc.services.disable(auth_host, 'nova-compute')
+        nc.services.disable(auth_host, 'nova-network')
 
-    def takedown(self):
-        nc = load_nova_client()
-        host = host()
-        nc.services.enable(host, 'nova-compute')
-        nc.services.enable(host, 'nova-network')
+    def takedown(self, conf):
+        nc = load_nova_client(conf)
+        auth_host = host(conf)
+        nc.services.enable(auth_host, 'nova-compute')
+        nc.services.enable(auth_host, 'nova-network')
