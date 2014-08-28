@@ -10,5 +10,6 @@ setup(
     keywords = "fogbow powernap win32",
     url = "https://github.com/fogbow/fogbow-powernap-win32",
     install_requires=['python-novaclient'],
-    packages=['win32powernap']
+    zip_safe = False,
+    packages=['win32powernap', 'win32powernap.actions', 'win32powernap.monitors']
 )
