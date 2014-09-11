@@ -2,13 +2,15 @@ from monitors import wininput
 from actions import novacpu
 import time
 import logging
+import tempfile
+import os
 
 class PowerNap:
 
     def __init__(self, conf):
         logging.basicConfig(level=logging.DEBUG, 
                             format='%(asctime)s %(levelname)s %(message)s',
-                            filename=conf['log_file'])
+                            filename=os.path.join(tempfile.gettempdir(), conf['log_file']))
         self.monitors = [wininput.InputMonitor()]
         self.actions = [novacpu.ManageNovaComputeAction()]
         self.conf = conf
