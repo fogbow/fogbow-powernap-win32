@@ -15,7 +15,7 @@ class PowerNap:
         self.actions = [novacpu.ManageNovaComputeAction()]
         self.conf = conf
         self.inactive_for = 0
-        self.idle = False
+        self.idle = True
 
     def run(self):
 
